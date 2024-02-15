@@ -1,6 +1,7 @@
 package edu.mirea.onebeattrue.composeanimations
 
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -56,17 +57,21 @@ fun Test() {
             sizeState = size
         )
 
-
+        var isRound by rememberSaveable {
+            mutableStateOf(false)
+        }
+        val cornerRadius = animateIntAsState(targetValue = if (isRound) 50 else 4)
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = {}
+            onClick = { isRound = !isRound }
         ) {
             Text(
                 text = "Animate shape",
             )
         }
         AnimatedContainer(
-            text = "Shape"
+            text = "Shape",
+            cornerRadiusPercentState = cornerRadius
         )
 
 
@@ -113,11 +118,12 @@ fun Test() {
 @Composable
 private fun AnimatedContainer(
     text: String,
-    sizeState: State<Dp> = mutableStateOf(200.dp)
+    sizeState: State<Dp> = mutableStateOf(200.dp),
+    cornerRadiusPercentState: State<Int> = mutableStateOf(4)
 ) {
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(cornerRadiusPercentState.value))
             .background(Color.Blue)
             .size(sizeState.value),
         contentAlignment = Alignment.Center
