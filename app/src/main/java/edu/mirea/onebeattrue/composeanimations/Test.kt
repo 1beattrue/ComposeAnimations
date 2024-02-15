@@ -1,9 +1,11 @@
 package edu.mirea.onebeattrue.composeanimations
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -47,7 +49,14 @@ fun Test() {
         var isIncreased by rememberSaveable {
             mutableStateOf(false)
         }
-        val size = animateDpAsState(targetValue = if (isIncreased) 300.dp else 200.dp)
+        val size = animateDpAsState(
+            label = "size",
+            targetValue = if (isIncreased) 300.dp else 200.dp,
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        )
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = { isIncreased = !isIncreased }
@@ -64,7 +73,9 @@ fun Test() {
         var isRound by rememberSaveable {
             mutableStateOf(false)
         }
-        val cornerRadius = animateIntAsState(targetValue = if (isRound) 50 else 4)
+        val cornerRadius = animateIntAsState(
+            targetValue = if (isRound) 50 else 4,
+        )
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = { isRound = !isRound }
