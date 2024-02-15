@@ -3,9 +3,11 @@ package edu.mirea.onebeattrue.composeanimations
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -50,13 +52,15 @@ fun Test() {
         var isIncreased by rememberSaveable {
             mutableStateOf(false)
         }
-        val size = animateDpAsState(
-            label = "size",
-            targetValue = if (isIncreased) 300.dp else 200.dp,
+        val infiniteFloat = rememberInfiniteTransition(label = "")
+        val size = infiniteFloat.animateFloat(
+            initialValue = 200f,
+            targetValue = 300f,
             animationSpec = infiniteRepeatable(
                 animation = tween(durationMillis = 1000),
                 repeatMode = RepeatMode.Reverse
-            )
+            ),
+            label = ""
         )
         Button(
             modifier = Modifier.fillMaxWidth(),
@@ -146,7 +150,7 @@ fun Test() {
 @Composable
 private fun AnimatedContainer(
     text: String,
-    sizeState: State<Dp> = mutableStateOf(200.dp),
+    sizeState: State<Float> = mutableStateOf(200f),
     cornerRadiusPercentState: State<Int> = mutableStateOf(4),
     borderWidthState: State<Dp> = mutableStateOf(0.dp),
     colorState: State<Color> = mutableStateOf(Color.Blue),
@@ -157,7 +161,7 @@ private fun AnimatedContainer(
             .alpha(alphaState.value)
             .clip(RoundedCornerShape(cornerRadiusPercentState.value))
             .background(colorState.value)
-            .size(sizeState.value)
+            .size(sizeState.value.dp)
             .border(width = borderWidthState.value, color = Color.Black),
         contentAlignment = Alignment.Center
     ) {
