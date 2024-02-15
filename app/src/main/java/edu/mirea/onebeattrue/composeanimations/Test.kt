@@ -1,6 +1,7 @@
 package edu.mirea.onebeattrue.composeanimations
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloat
@@ -87,7 +88,7 @@ fun Test() {
             initialValue = 0f,
             targetValue = 360f,
             animationSpec = infiniteRepeatable(
-                animation = tween(1000),
+                animation = tween(durationMillis = 1000, easing = LinearEasing),
                 repeatMode = RepeatMode.Restart
             ), label = ""
         )
