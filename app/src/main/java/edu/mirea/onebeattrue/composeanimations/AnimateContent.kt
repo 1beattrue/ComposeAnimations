@@ -2,8 +2,9 @@ package edu.mirea.onebeattrue.composeanimations
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideOut
 import androidx.compose.animation.with
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -20,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -45,7 +47,8 @@ fun AnimateContent() {
         AnimatedContent(
             targetState = isFirstScreenLaunched, label = "screen switch",
             transitionSpec = {
-                fadeIn() with fadeOut()
+                slideIn(tween()) { IntOffset(it.width, 0) } with
+                        slideOut(tween()) { IntOffset(-it.width, 0) }
             }
         ) { shouldLaunchFirstScreen ->
             if (shouldLaunchFirstScreen) {
