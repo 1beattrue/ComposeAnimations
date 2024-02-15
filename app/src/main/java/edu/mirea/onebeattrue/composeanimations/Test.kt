@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -79,7 +80,16 @@ fun Test() {
             mutableStateOf(false)
         }
         val cornerRadius = animateIntAsState(
-            targetValue = if (isRound) 50 else 4,
+            targetValue = if (isRound) 50 else 4, label = "",
+        )
+        val infiniteTransition = rememberInfiniteTransition()
+        val rotate = infiniteTransition.animateFloat(
+            initialValue = 0f,
+            targetValue = 360f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(1000),
+                repeatMode = RepeatMode.Restart
+            ), label = ""
         )
         Button(
             modifier = Modifier.fillMaxWidth(),
@@ -91,7 +101,8 @@ fun Test() {
         }
         AnimatedContainer(
             text = "Shape",
-            cornerRadiusPercentState = cornerRadius
+            cornerRadiusPercentState = cornerRadius,
+            rotateState = rotate
         )
 
         var isBordered by rememberSaveable {
@@ -154,10 +165,12 @@ private fun AnimatedContainer(
     cornerRadiusPercentState: State<Int> = mutableStateOf(4),
     borderWidthState: State<Dp> = mutableStateOf(0.dp),
     colorState: State<Color> = mutableStateOf(Color.Blue),
-    alphaState: State<Float> = mutableStateOf(1f)
+    alphaState: State<Float> = mutableStateOf(1f),
+    rotateState: State<Float> = mutableStateOf(0f)
 ) {
     Box(
         modifier = Modifier
+            .rotate(rotateState.value)
             .alpha(alphaState.value)
             .clip(RoundedCornerShape(cornerRadiusPercentState.value))
             .background(colorState.value)
