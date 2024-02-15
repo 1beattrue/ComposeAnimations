@@ -45,7 +45,11 @@ fun AnimateContent() {
         AnimatedContent(
             targetState = isFirstScreenLaunched, label = "screen switch",
             transitionSpec = {
-                slideInHorizontally { it } with slideOutHorizontally { -it }
+                if (targetState) {
+                    slideInHorizontally { it } with slideOutHorizontally { -it }
+                } else {
+                    slideInHorizontally { -it } with slideOutHorizontally { it }
+                }
             }
         ) { shouldLaunchFirstScreen ->
             if (shouldLaunchFirstScreen) {
